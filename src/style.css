@@ -1,0 +1,135 @@
+:root {
+  /* Design tokens pulled from Figma (Digifolk Web) */
+  --color-gray: #d8d8d8;
+  --green: #41823e;
+  --purple: #6853bd;
+  --red: #b54c4c;
+  --yellow: #8c8c37; /* nav hover (line animation + typography) */
+  --fill-background: #faf9f6;
+  --black: #1f1f1f;
+
+  /* Layout */
+  --page-max: 1280px;
+  --page-padding: 48px;
+  --navbar-height: 88px;
+  --bottombar-height: 96px;
+
+  /* Web-friendly type scale (scaled down from the 1440 Figma canvas) */
+  --fs-h1: 32px;          /* page titles            (Figma 48) */
+  --fs-h2: 26px;          /* about section titles    (Figma 44) */
+  --fs-card-title: 18px;  /* card titles             (Figma 24) */
+  --fs-body: 17px;        /* Josefin Slab body       (Figma 24) */
+  --fs-body-sm: 15px;     /* viz / list body         (Figma 24) */
+  --fs-nav: 15px;         /* navbar links            (Figma 20) */
+  --fs-author: 11px;      /* monospace author lines  (Figma 10-13) */
+  --fs-field: 16px;       /* form fields             (Figma 24) */
+  --fs-upload: 20px;      /* upload field            (Figma 32) */
+  --fs-viz-name: clamp(22px, 2.6vw, 32px); /* viz title (Figma 84) */
+  --fs-viz-author: clamp(13px, 1.4vw, 16px); /* viz author (Figma 32) */
+  --fs-subtitle: 15px;    /* subtitles               (Figma 20) */
+  --fs-pill: 14px;        /* pill buttons            (Figma 16) */
+  --fs-login-label: 22px; /* login labels            (Figma 32) */
+
+  /* Pill / button hover colours (per accent) — flat, not gradients */
+  --hover-green: rgba(65, 130, 62, 0.55);
+  --hover-red: rgba(181, 76, 76, 0.55);
+  --hover-purple: rgba(104, 83, 189, 0.55);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Navbar wraps to multiple rows on small screens (rendered height varies
+   ~140-177px across 701-820px depending on how many link-rows wrap); reserve
+   enough room for the tallest case so content never sits under the navbar. */
+@media (max-width: 820px) {
+  :root {
+    --navbar-height: 195px;
+  }
+}
+
+/* Mobile: the desktop navbar is replaced by the hamburger top bar (60px). */
+@media (max-width: 700px) {
+  :root {
+    --navbar-height: 76px;
+    --bottombar-height: 70px;
+    --page-padding: 22px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  /* Full-bleed sections (Home hero, Visualisations pinned window) break out
+     of .page__inner with width:100vw, which is wider than the visible
+     viewport whenever a vertical scrollbar is present (100vw includes the
+     scrollbar gutter) — that alone was enough to introduce a stray
+     horizontal scrollbar. This is the guard against that, site-wide. */
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--fill-background);
+  color: #000;
+  font-family: 'Archivo', system-ui, sans-serif;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* Shared page scaffold ------------------------------------------------ */
+
+/* Every page is a vertical scroll container. The navbar / bottom bar are
+   fixed, so content gets top + bottom padding to clear them. */
+.page {
+  position: relative;
+  min-height: 100vh;
+  background: var(--fill-background);
+  padding: var(--navbar-height) var(--page-padding) calc(var(--bottombar-height) + 40px);
+}
+
+.page__inner {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Page that uses a back-arrow instead of the navbar needs less top room. */
+.page--detail {
+  padding-top: 120px;
+}
+
+@media (max-width: 700px) {
+  .page--detail {
+    padding-top: 76px;
+  }
+}
+
+.page-title {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: var(--fs-h1);
+  line-height: normal;
+  color: #000;
+  margin: 0;
+}
