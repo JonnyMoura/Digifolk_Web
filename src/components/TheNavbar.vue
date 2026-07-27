@@ -47,7 +47,7 @@ const links = [
   { label: 'EDUCATIONAL MATERIALS', to: '/educational-materials' },
   { label: 'VISUALISATIONS', to: '/visualisations' },
   {
-    label: 'CONTRIBUTE',
+    label: 'CONTRIBUTIONS',
     to: '/contribute',
     children: [
       { label: 'Pieces', to: '/pieces' },
