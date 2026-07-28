@@ -27,7 +27,7 @@ const attributeDisplayNames = {
   publisher: 'Publisher',
   real_key: 'Key',
   'spatial.country': 'Country',
-  'temporal.year': 'Coverage Year',
+  'temporal.year': 'coverage Year',
   subject: 'Subject',
   tempo: 'Tempo',
 }
