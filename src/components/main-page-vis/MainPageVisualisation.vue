@@ -27,12 +27,18 @@ const attributeDisplayNames = {
   publisher: 'Publisher',
   real_key: 'Key',
   'spatial.country': 'Country',
-  'temporal.year': 'Year',
+  'temporal.year': 'Coverage Year',
   subject: 'Subject',
   tempo: 'Tempo',
 }
 
 const attributeKeySorted = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'Ab', 'A', 'Bb', 'B']
+
+const attributeModeMapping = {
+  Major: 'Ionian',
+  Minor: 'Aeolian',
+  Dorico: 'Dorian',
+}
 
 const attributeTempoMapping = {
   'î = 90': 'Andante moderato',
@@ -90,11 +96,30 @@ onMounted(() => {
   getListOfPiecesWDetails(true)
     .then((data) => {
       data.forEach((entry) => {
-        if (entry.tempo && attributeTempoMapping[entry.tempo]) {
-          entry.tempo = attributeTempoMapping[entry.tempo]
+        // "MX" is used as a duplicate/mistaken tag for Spanish and should
+        // be merged into "ES" rather than shown as its own language.
+        entry.language = entry.language === 'MX' ? 'ES' : entry.language
+
+        // Some tempo values are corrupted with stray C1 control characters
+        // that make them miss attributeTempoMapping below. Strip those before matching.
+        const normalizedTempo = entry.tempo?.replace(/[\u0080-\u009F]/g, '')
+
+        if (normalizedTempo && attributeTempoMapping[normalizedTempo]) {
+          entry.tempo = attributeTempoMapping[normalizedTempo]
         }
 
-        entry.mode = entry.mode.charAt(0).toUpperCase() + entry.mode.slice(1)
+        // "-1" is a placeholder for an unknown/unset mode, not a real value.
+        entry.mode = entry.mode === '-1' ? '' : entry.mode.charAt(0).toUpperCase() + entry.mode.slice(1)
+
+        // Collapse mode name variants/translations onto their canonical name:
+        // Major/Minor are the common names for Ionian/Aeolian, "Dorico" is
+        // Portuguese for Dorian, and numbered Aeolian variants (e.g. "Aeolian6")
+        // are treated as plain Aeolian.
+        if (entry.mode.startsWith('Aeolian')) {
+          entry.mode = 'Aeolian'
+        } else if (attributeModeMapping[entry.mode]) {
+          entry.mode = attributeModeMapping[entry.mode]
+        }
 
         if (!entry.spatial?.country || entry.spatial?.country === 'Unknown' || entry.spatial?.country === 'unknown') {
           entry.spatial = { ...entry.spatial, country: getCountryFromMusicId(entry.id) }

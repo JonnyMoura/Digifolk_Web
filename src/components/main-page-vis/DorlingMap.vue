@@ -310,6 +310,7 @@ function draw() {
       .data(props.dataAggregated)
       .join('text')
       .attr('class', 'group-label')
+      .classed('group-label--key', (d) => d.attribute === 'real_key')
       .attr('x', (d) => groupPositions.get(d.value)?.x ?? centerX)
       .attr('y', (d) => groupPositions.get(d.value)?.y ?? centerY)
       .attr('text-anchor', 'middle')
@@ -372,7 +373,8 @@ onBeforeUnmount(() => {
 }
 
 .dorling-map .node.hasNoGroup {
-  opacity: 0.25;
+  display: none;
+  pointer-events: none;
 }
 
 .dorling-map .group-label {
@@ -383,6 +385,12 @@ onBeforeUnmount(() => {
   text-transform: uppercase;
   letter-spacing: 0.05em;
   pointer-events: none;
+}
+
+.dorling-map .group-label.group-label--key {
+  /* Musical key labels (e.g. "Ab", "Bb", "Eb") use a lowercase "b"
+     for flat notes; forcing uppercase would turn them into "AB", "BB", "EB". */
+  text-transform: none;
 }
 
 .dorling-map .tooltip-background {
